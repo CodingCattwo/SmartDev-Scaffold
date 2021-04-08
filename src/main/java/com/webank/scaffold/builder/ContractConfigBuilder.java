@@ -15,6 +15,7 @@
  */
 package com.webank.scaffold.builder;
 
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeSpec;
 import com.webank.scaffold.config.UserConfig;
@@ -55,7 +56,13 @@ public class ContractConfigBuilder implements JavaFileBuilder {
         ClassName contractConfigClass = ClassName.get(pkg, FileNameConstants.CONTRACT_CONFIG);
         TypeSpec.Builder contractConfigBuilder = TypeSpec.classBuilder(contractConfigClass)
                 .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(Data.class);
+                .addAnnotation(Data.class)
+                .addAnnotation(ClassName.get("org.springframework.context.annotation","Configuration"))
+                .addAnnotation(
+                        AnnotationSpec
+                                .builder(ClassName.get("org.springframework.boot.context.properties","ConfigurationProperties"))
+                                .addMember("prefix", "\"contract\"")
+                                .build());
 
         //2. Populate contract fields
         for (String contract : this.contracts) {
