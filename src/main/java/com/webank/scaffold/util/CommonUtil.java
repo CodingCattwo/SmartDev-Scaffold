@@ -12,8 +12,6 @@ import java.util.stream.Collectors;
  * @data 2021/01/26
  */
 public class CommonUtil {
-    private CommonUtil(){}
-
 
     public static String makeFirstCharUpperCase(String s){
         return Character.toUpperCase( s.charAt(0)) + s.substring(1);
@@ -31,6 +29,4 @@ public class CommonUtil {
                 .collect(Collectors.toList());
         return contractList;
     }
-
-
 }

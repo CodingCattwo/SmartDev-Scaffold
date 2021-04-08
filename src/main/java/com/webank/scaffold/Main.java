@@ -1,5 +1,6 @@
 package com.webank.scaffold;
 
+import com.webank.scaffold.cmd.ScaffoldRunner;
 import picocli.CommandLine;
 
 /**
