@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
  */
 public class CommonUtil {
 
+    private CommonUtil(){}
+
     public static String makeFirstCharUpperCase(String s){
         return Character.toUpperCase( s.charAt(0)) + s.substring(1);
     }

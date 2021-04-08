@@ -2,7 +2,7 @@ package com.webank.scaffold.factory;
 
 import com.webank.scaffold.artifact.dir.RootDir;
 import com.webank.scaffold.config.UserConfig;
-
+import com.webank.scaffold.exception.ScaffoldException;
 import java.io.File;
 
 /**
@@ -13,9 +13,7 @@ import java.io.File;
  */
 public class ProjectFactory {
 
-    /**
-     * create project, which can be ran by users by using gradle test.
-     */
+
     private UserConfig config;
 
     public ProjectFactory(String group, String artifact, String solidityDir,  String output, String need){
@@ -35,7 +33,7 @@ public class ProjectFactory {
         catch (Exception ex){
             ex.printStackTrace();
 
-            //Delete all project data in case of exception
+            // 3.Delete all project data in case of exception
             try{
                 project.clean();
             }

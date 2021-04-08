@@ -2,7 +2,6 @@ package com.webank.scaffold.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Map;
@@ -18,7 +17,6 @@ public class IOUtil {
     private IOUtil(){}
 
     private static final int BUF_SIZE = 2048;
-
 
     public static String readAsString(InputStream inputStream) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
