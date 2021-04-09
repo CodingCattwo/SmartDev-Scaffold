@@ -3,10 +3,10 @@ package com.webank.scaffold.handler;
 import com.squareup.javapoet.*;
 import com.webank.scaffold.config.UserConfig;
 import com.webank.scaffold.constants.FileNameConstants;
-import com.webank.scaffold.util.CommonUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.fisco.bcos.sdk.client.Client;
+import org.fisco.bcos.sdk.utils.StringUtils;
 
 import javax.lang.model.element.Modifier;
 import java.io.File;
@@ -65,7 +65,7 @@ public class ServiceBeanConfigHandler {
         String serviceName = contract+"Service";
         ClassName serviceClass = ClassName.get(servicePackage, serviceName);
         builder.addMethod(
-                MethodSpec.methodBuilder(CommonUtil.makeFirstCharLowerCase(contract)+"Service")
+                MethodSpec.methodBuilder(StringUtils.lowercaseFirstLetter(contract)+"Service")
                 .addModifiers(Modifier.PUBLIC)
                         .returns(serviceClass)
                         .addParameter(ParameterSpec.builder(Client.class, "client").build())

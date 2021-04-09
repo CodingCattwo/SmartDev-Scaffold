@@ -20,8 +20,8 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeSpec;
 import com.webank.scaffold.config.UserConfig;
 import com.webank.scaffold.constants.FileNameConstants;
-import com.webank.scaffold.util.CommonUtil;
 import lombok.Data;
+import org.fisco.bcos.sdk.utils.StringUtils;
 
 import javax.lang.model.element.Modifier;
 import java.util.Arrays;
@@ -66,7 +66,7 @@ public class ContractConfigBuilder implements JavaFileBuilder {
 
         //2. Populate contract fields
         for (String contract : this.contracts) {
-            String fieldName = CommonUtil.makeFirstCharLowerCase(contract)+"Address";
+            String fieldName = StringUtils.lowercaseFirstLetter(contract) +"Address";
             contractConfigBuilder.addField(String.class, fieldName, Modifier.PRIVATE);
         }
         return Arrays.asList(contractConfigBuilder.build());

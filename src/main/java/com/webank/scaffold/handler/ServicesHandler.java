@@ -4,7 +4,6 @@ import com.squareup.javapoet.*;
 import com.webank.scaffold.config.UserConfig;
 import com.webank.scaffold.constants.DirNameConstants;
 import com.webank.scaffold.constants.FileNameConstants;
-import com.webank.scaffold.util.CommonUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.fisco.bcos.sdk.abi.wrapper.ABIDefinition;
@@ -13,6 +12,8 @@ import org.fisco.bcos.sdk.transaction.manager.AssembleTransactionProcessor;
 import org.fisco.bcos.sdk.transaction.manager.TransactionProcessorFactory;
 import org.fisco.bcos.sdk.transaction.model.dto.CallResponse;
 import org.fisco.bcos.sdk.transaction.model.dto.TransactionResponse;
+import org.fisco.bcos.sdk.utils.StringUtils;
+
 import javax.lang.model.element.Modifier;
 import java.util.Arrays;
 import java.util.Map;
@@ -97,7 +98,7 @@ public class ServicesHandler {
                 = FieldSpec.builder(String.class, "address")
                 .addModifiers(Modifier.PRIVATE)
                 .addAnnotation(AnnotationSpec.builder(ClassName.get("org.springframework.beans.factory.annotation","Value"))
-                        .addMember("value","\"$${system.contract.$LAddress}\"", CommonUtil.makeFirstCharLowerCase(contract)).build())
+                        .addMember("value","\"$${system.contract.$LAddress}\"", StringUtils.lowercaseFirstLetter(contract)).build())
                 .build();
         FieldSpec clientField
                 = FieldSpec.builder(Client.class, "client")

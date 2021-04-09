@@ -25,8 +25,12 @@ import org.fisco.bcos.sdk.abi.wrapper.ABIDefinition;
 import org.fisco.bcos.sdk.abi.wrapper.ABIDefinitionFactory;
 import org.fisco.bcos.sdk.abi.wrapper.ContractABIDefinition;
 import org.fisco.bcos.sdk.crypto.CryptoSuite;
+import org.fisco.bcos.sdk.utils.StringUtils;
+
 import javax.lang.model.element.Modifier;
+import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * ABIUtil
@@ -89,7 +93,7 @@ public class ABIUtil {
             List<ABIDefinition> definitions = e.getValue();
             for(int i=0;i<definitions.size();i++){
                 ABIDefinition abiDef = definitions.get(i);
-                String functionName =  CommonUtil.makeFirstCharUpperCase(abiDef.getName());
+                String functionName = StringUtils.capitaliseFirstLetter(abiDef.getName());
                 String overloadMark = i>0?Integer.toString(i):"";
                 String className = contractName
                         + functionName
@@ -100,6 +104,15 @@ public class ABIUtil {
             }
         }
         return result;
+    }
+
+    public static List<String> contracts(File abiDir, String need){
+        Set<String> needContracts = Arrays.stream(need.split(",|;")).collect(Collectors.toSet());
+        List<String> contractList = Arrays.stream(abiDir.listFiles())
+                .map(f->f.getName().split("\\.")[0])
+                .filter(c-> (need==null||need.isEmpty()) || needContracts.contains(c))
+                .collect(Collectors.toList());
+        return contractList;
     }
 
     interface ListObject extends List<Object> {

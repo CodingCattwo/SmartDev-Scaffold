@@ -9,7 +9,7 @@ import com.webank.scaffold.constants.DirNameConstants;
 import com.webank.scaffold.constants.FileNameConstants;
 import com.webank.scaffold.handler.ServicesHandler;
 import com.webank.scaffold.config.UserConfig;
-import com.webank.scaffold.util.CommonUtil;
+import com.webank.scaffold.util.ABIUtil;
 import com.webank.scaffold.util.IOUtil;
 import org.apache.commons.io.FileUtils;
 
@@ -68,7 +68,7 @@ public class MainJavaDir extends DirectoryArtifact {
 
     private void handleBOAndService() throws Exception{
         File javaDir = this.toFile();
-        List<String> contractList = CommonUtil.contracts(abiDir, this.config.getNeed());
+        List<String> contractList = ABIUtil.contracts(abiDir, this.config.getNeed());
         for(String contractName :contractList){
             File abiFile = new File(abiDir, contractName + FileNameConstants.ABI_FILE_POSTFIX);
             String abiStr = FileUtils.readFileToString(abiFile);
@@ -93,7 +93,7 @@ public class MainJavaDir extends DirectoryArtifact {
     }
 
     private void handleContractConfig() throws Exception {
-        List<String> contracts = CommonUtil.contracts(this.abiDir, this.config.getNeed());
+        List<String> contracts = ABIUtil.contracts(this.abiDir, this.config.getNeed());
         ContractConfigBuilder contractConfigBuilder = new ContractConfigBuilder(config, contracts);
         contractConfigBuilder.generateJavaFile(FileNameConstants.CONFIG_PKG_POSTFIX, this.toFile());
     }

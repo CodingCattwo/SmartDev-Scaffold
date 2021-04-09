@@ -4,7 +4,7 @@ import com.webank.scaffold.compiler.ContractCompiler;
 import com.webank.scaffold.artifact.file.ApplicationProperties;
 import com.webank.scaffold.config.UserConfig;
 import com.webank.scaffold.constants.DirNameConstants;
-import com.webank.scaffold.util.CommonUtil;
+import com.webank.scaffold.util.ABIUtil;
 import lombok.Getter;
 
 import java.io.File;
@@ -41,7 +41,7 @@ public class MainResourceDir extends DirectoryArtifact {
         //3. create Application.properties
         ApplicationProperties applicationProperties = new ApplicationProperties(
                 this.toFile(),
-                CommonUtil.contracts(new File(this.toFile(), DirNameConstants.ABI_DIR), this.config.getNeed()));
+                ABIUtil.contracts(new File(this.toFile(), DirNameConstants.ABI_DIR), this.config.getNeed()));
         applicationProperties.generate();
     }
 

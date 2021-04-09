@@ -2,7 +2,7 @@ package com.webank.scaffold.artifact.file;
 
 import com.webank.scaffold.artifact.Artifact;
 import com.webank.scaffold.constants.FileNameConstants;
-import com.webank.scaffold.util.CommonUtil;
+import org.fisco.bcos.sdk.utils.StringUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -56,7 +56,7 @@ public class ApplicationProperties implements Artifact {
 
     private void writeContractKeys(BufferedWriter writer) throws IOException {
         for(String contractName : contracts){
-            contractName = CommonUtil.makeFirstCharLowerCase(contractName);
+            contractName = StringUtils.lowercaseFirstLetter(contractName);
             writer.write("### Optional. Please fill this address if you want to use related service\n");
             writer.write("contract."+contractName+"Address=\n");
         }
