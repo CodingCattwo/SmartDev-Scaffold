@@ -16,7 +16,7 @@ import java.io.InputStream;
  * @author marsli
  */
 public class NewBuildGradle extends BuildGradle {
-    private static final String TEMPLATE_RESOURCE = "templates/build.gradle";
+    private static final String TEMPLATE_RESOURCE = "webase_templates/build.gradle";
     private static final String BUILD_GRADLE_FILE = "build.gradle";
     private File parent;
     private UserConfig userConfig;
