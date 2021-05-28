@@ -1,6 +1,6 @@
 package com.webank.scaffold.factory;
 
-import com.webank.scaffold.artifact.BuildGradle;
+import com.webank.scaffold.artifact.NewBuildGradle;
 import com.webank.scaffold.artifact.NewGradleDir;
 import com.webank.scaffold.artifact.NewMainDir;
 import com.webank.scaffold.artifact.NewMainResourceDir.ContractInfo;
@@ -103,7 +103,7 @@ public class WebaseProjectFactory extends ProjectFactory {
             systemPeers, groupId, hexPrivateKey, sdkContentMap);
         TestDir testDir = new TestDir(srcDir.toFile());
         NewTestJavaDir testJavaDir = new NewTestJavaDir(testDir.toFile(), config);
-        BuildGradle buildGradle = new BuildGradle(project.toFile(), config);
+        NewBuildGradle newBuildGradle = new NewBuildGradle(project.toFile(), config);
         SettingsGradle settingsGradle = new SettingsGradle(project.toFile(), config);
 
         project.generate();
@@ -111,7 +111,7 @@ public class WebaseProjectFactory extends ProjectFactory {
         mainDir.generate();
         testDir.generate();
         testJavaDir.generate();
-        buildGradle.generate();
+        newBuildGradle.generate();
         settingsGradle.generate();
         this.generateGradle(project, gradleDir);
     }
