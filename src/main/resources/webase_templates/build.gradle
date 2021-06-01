@@ -7,7 +7,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.webank:solc-gradle-plugin:1.0.0-SNAPSHOT'
+//        classpath 'com.webank:solc-gradle-plugin:1.0.0'
         classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.1.RELEASE")
     }
 }
@@ -18,7 +18,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven'
-apply plugin: 'solc-gradle-plugin'
+//apply plugin: 'solc-gradle-plugin'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
@@ -27,10 +27,10 @@ targetCompatibility = 1.8
 group = '${generator.group}'
 version = '1.0.0-SNAPSHOT'
 
-solc{
-    output = 'src/main/resources'
-    onlyAbiBin = true
-}
+//solc{
+//    output = 'src/main/resources'
+//    onlyAbiBin = true
+//}
 
 
 repositories {
