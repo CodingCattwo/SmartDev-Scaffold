@@ -78,7 +78,7 @@ public class NewMainDir extends MainDir {
         //1. Abi And Bin
         String need = StringUtils.join(
             contractInfoList.stream().map(ContractInfo::getContractName).toArray(),",");
-        MainJavaDir javas = new MainJavaDir(
+        NewMainJavaDir javas = new NewMainJavaDir(
                 this.toFile(),
                 resources.getAbiDir(),
                 need,
