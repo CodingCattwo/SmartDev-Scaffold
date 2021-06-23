@@ -79,7 +79,7 @@ public class NewApplicationProperties extends ApplicationProperties {
     }
 
     private void writeSdkConnectKeys(BufferedWriter writer) throws IOException {
-        writer.write("### Required\n");
+        writer.write("### Required\n, node's {ip:port} to connect.");
         if (systemPeers != null) {
             writer.write("system.peers=" + this.systemPeers + "\n");
         } else {

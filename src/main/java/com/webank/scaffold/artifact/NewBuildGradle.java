@@ -55,6 +55,7 @@ public class NewBuildGradle extends BuildGradle {
 
     }
 
+    @Override
     public void generate(InputStream templateInput, File outputPath) throws Exception {
         String template = IOUtil.readAsString(templateInput);
         template = this.replaceAllVars(template);
@@ -84,4 +85,5 @@ public class NewBuildGradle extends BuildGradle {
         template = template.replace("${package}", pkg);
         return template;
     }
+
 }

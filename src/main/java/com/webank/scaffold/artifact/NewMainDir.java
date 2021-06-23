@@ -123,7 +123,10 @@ public class NewMainDir extends MainDir {
             logger.info("javaFileOutputDir mkdir:{}", result);
         }
         for (ContractInfo info : contractInfoList) {
-            System.out.println("now generate java file of " + info.getContractName());
+            if (info == null) {
+                logger.error("generate java file error for contractInfo list contains null info");
+                continue;
+            }
             logger.info("now generate java file of {}", info.getContractName());
             try {
                 new SolidityContractWrapper().generateJavaFiles(
@@ -134,7 +137,6 @@ public class NewMainDir extends MainDir {
                         javaFileOutputDir,
                         "");
             } catch (Exception e) {
-                System.out.println("generate java file error" + e.getMessage());
                 logger.error("generate java file of {} failed for error:{}", info.getContractName(), e);
             }
         }
