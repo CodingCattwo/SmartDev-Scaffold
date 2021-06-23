@@ -1,5 +1,6 @@
 package com.webank.scaffold.factory;
 
+import com.webank.scaffold.artifact.GradleWrapper;
 import com.webank.scaffold.artifact.NewBuildGradle;
 import com.webank.scaffold.artifact.NewGradleDir;
 import com.webank.scaffold.artifact.NewMainDir;
@@ -30,7 +31,7 @@ public class WebaseProjectFactory extends ProjectFactory {
 
     /**
      * use raw content to generate project
-     * @param contractInfoList
+     * @param contractInfoList abi required
      * @param group
      * @param artifact
      * @param outputDir
@@ -40,7 +41,7 @@ public class WebaseProjectFactory extends ProjectFactory {
      * @param sdkContentMap can be null
      * @return
      */
-    public ProjectArtifact buildProjectDir(List<ContractInfo> contractInfoList,
+    public ProjectArtifact buildProjectDirWebase(List<ContractInfo> contractInfoList,
         String group, String artifact, String outputDir, String gradleDir,
         String systemPeers, Integer groupId, String hexPrivateKey, Map<String, String> sdkContentMap)
         throws Exception {
@@ -76,7 +77,7 @@ public class WebaseProjectFactory extends ProjectFactory {
     }
 
 
-    private ProjectArtifact buildProjectDir(String outputDir, UserConfig config){
+    private ProjectArtifact buildProjectDir(String outputDir, UserConfig config) {
         ProjectArtifact project = new ProjectArtifact(new File(outputDir), config);
         if(project.toFile().exists()){
             throw new ScaffoldException("Project is not clean, please remove the directory first:"+project.toFile().getAbsolutePath());
@@ -105,6 +106,7 @@ public class WebaseProjectFactory extends ProjectFactory {
         NewTestJavaDir testJavaDir = new NewTestJavaDir(testDir.toFile(), config);
         NewBuildGradle newBuildGradle = new NewBuildGradle(project.toFile(), config);
         SettingsGradle settingsGradle = new SettingsGradle(project.toFile(), config);
+        GradleWrapper gradleWrapperScript = new GradleWrapper(project.toFile());
 
         project.generate();
         srcDir.generate();
@@ -113,6 +115,7 @@ public class WebaseProjectFactory extends ProjectFactory {
         testJavaDir.generate();
         newBuildGradle.generate();
         settingsGradle.generate();
+        gradleWrapperScript.generate();
         this.generateGradle(project, gradleDir);
     }
 

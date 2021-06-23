@@ -69,7 +69,7 @@ public class WebaseProjectFactoryTest {
         WebaseProjectFactory webaseProjectFactory = new WebaseProjectFactory();
         // ProjectArtifact result = projectFactory.buildProjectDir(Collections.singletonList(contractInfo),
         ProjectArtifact result = webaseProjectFactory
-            .buildProjectDir(Arrays.asList(contractInfo, creditContract),
+            .buildProjectDirWebase(Arrays.asList(contractInfo, creditContract),
             group, artifactName, outputDir, gradleDir,
             //null, null, null, null);
             "127.0.0.1:25200", 2, "0x123", sdkMap);
