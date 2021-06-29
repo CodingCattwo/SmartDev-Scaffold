@@ -6,8 +6,6 @@
 package com.webank.scaffold.artifact;
 
 import com.squareup.javapoet.TypeSpec;
-import com.webank.scaffold.artifact.NewMainResourceDir.ContractInfo;
-import com.webank.scaffold.clhandler.BOHandler;
 import com.webank.scaffold.clhandler.ServicesHandler;
 import com.webank.scaffold.clhandler.SystemConfigHandler;
 import com.webank.scaffold.config.UserConfig;
@@ -97,7 +95,7 @@ public class NewMainJavaDir extends MainJavaDir {
     private void handleSdkBeanConfig() throws Exception {
         File javaDir = this.toFile();
         String configPackage = PackageNameUtil.getConfigPackageName(this.config);
-        SdkBeanConfigJava sdkBeanConfigJava = new SdkBeanConfigJava(PackageNameUtil.convertPackageToFile(javaDir, configPackage), this.config);
+        NewSdkBeanConfigJava sdkBeanConfigJava = new NewSdkBeanConfigJava(PackageNameUtil.convertPackageToFile(javaDir, configPackage), this.config);
         sdkBeanConfigJava.generate();
     }
 
