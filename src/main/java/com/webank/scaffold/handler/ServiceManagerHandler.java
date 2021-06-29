@@ -16,17 +16,19 @@ package com.webank.scaffold.handler;
 
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.TypeVariableName;
 import com.webank.scaffold.clhandler.SystemConfigHandler;
 import com.webank.scaffold.config.UserConfig;
 import com.webank.scaffold.util.PackageNameUtil;
 import java.io.File;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -130,27 +132,33 @@ public class ServiceManagerHandler {
             AnnotationSpec.Builder annotation = AnnotationSpec
                 .builder(ClassName.get("org.springframework.context.annotation","Bean"))
                 .addMember("value", "\"" + contractServiceName + "\"");
+
+            /**
+             *  return type of Map<String, contractService>
+             */
+            ParameterizedTypeName mapType = ParameterizedTypeName.get(ClassName.get(Map.class),
+                ClassName.get(String.class), serviceClassName);
+
             /**
              * add method name with return
-             * todo return Map
              */
             MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("init" + contractName + "ServiceManager");
             methodBuilder.addModifiers(Modifier.PUBLIC)
                 .addException(Exception.class)
-                //.addAnnotation(ClassName.get("import org.springframework.context.annotation","Bean"))
                 .addAnnotation(annotation.build())
-                .returns(Map.class);
+                .returns(mapType);
 
             // new concurrent hash map of contractService
-            methodBuilder.addStatement("$T<String, " + serviceClassName + "> serviceMap = new $T<>(this.hexPrivateKeyList.size())",
-                Map.class, ConcurrentHashMap.class);
+            methodBuilder.addStatement("$T serviceMap = new $T<>(this.hexPrivateKeyList.size())",
+                mapType, ConcurrentHashMap.class);
             /**
              * add loop
               */
             String firstLowerCaseContractServiceName = contractServiceName.substring(0, 1).toLowerCase() + contractServiceName.substring(1);
             methodBuilder.addCode(
                 "for (int i = 0; i < this.hexPrivateKeyList.size(); i++) {\n"
-                + "\t" + serviceClassName + " " + firstLowerCaseContractServiceName + " = new " + serviceClassName + "();\n"
+                + "\t" + contractServiceName + " " + firstLowerCaseContractServiceName + " = new " + contractServiceName + "();\n"
+                //+ "\t" + serviceClassName + " " + firstLowerCaseContractServiceName + " = new " + serviceClassName + "();\n"
                 + "\t" + firstLowerCaseContractServiceName + ".setAddress(this.config.getContract().get" + contractName + "Address());\n"
                 + "\t" + firstLowerCaseContractServiceName + ".setClient(this.client);\n"
                 + "\t" + "if (!((String)this.hexPrivateKeyList.get(i)).isEmpty()) {\n"
@@ -167,17 +175,7 @@ public class ServiceManagerHandler {
 
         return typeBuilder;
     }
-    //for (int i = 0; i < this.hexPrivateKeyList.size(); i++) {
-    //            BAC002Service bac002Service = new BAC002Service();
-    //            bac002Service.setAddress(this.config.getContract().getBAC002Address());
-    //            bac002Service.setClient(client);
-    //            if (!((String)this.hexPrivateKeyList.get(i)).isEmpty()) {
-    //                AssembleTransactionProcessor txProcessor = TransactionProcessorFactory
-    //                    .createAssembleTransactionProcessor(this.client, this.client.getCryptoSuite().createKeyPair((String)this.hexPrivateKeyList.get(i)));
-    //                bac002Service.setTxProcessor(txProcessor);
-    //            }
-    //            serviceMap.put(client.getCryptoSuite().getCryptoKeyPair().getAddress(), bac002Service);
-    //        }
+
 
 //    private ClassName serviceClassName(String contract){
 //        String pkg = PackageNameUtil.getRootPackageName(config);
