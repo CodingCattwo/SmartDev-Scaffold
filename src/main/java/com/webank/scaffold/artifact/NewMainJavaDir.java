@@ -6,15 +6,18 @@
 package com.webank.scaffold.artifact;
 
 import com.squareup.javapoet.TypeSpec;
+import com.webank.scaffold.artifact.NewMainResourceDir.ContractInfo;
 import com.webank.scaffold.clhandler.BOHandler;
 import com.webank.scaffold.clhandler.ServicesHandler;
 import com.webank.scaffold.clhandler.SystemConfigHandler;
 import com.webank.scaffold.config.UserConfig;
 import com.webank.scaffold.handler.NewBOHandler;
+import com.webank.scaffold.handler.ServiceManagerHandler;
 import com.webank.scaffold.util.CommonUtil;
 import com.webank.scaffold.util.IOUtil;
 import com.webank.scaffold.util.PackageNameUtil;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -49,6 +52,7 @@ public class NewMainJavaDir extends MainJavaDir {
         this.handleSystemConfig();
         this.handleSdkBeanConfig();
         this.handleCommonResponse();
+        this.handleServiceManager();
     }
 
     private void handleApplication() throws Exception {
@@ -104,6 +108,16 @@ public class NewMainJavaDir extends MainJavaDir {
         commonResponseJava.generate();
     }
 
+    /**
+     * generate service manager
+     */
+    private void handleServiceManager() throws IOException {
+        List<String> contractNameList = Arrays.asList(this.need.split(","));
+        ServiceManagerHandler serviceManagerHandler = new ServiceManagerHandler(contractNameList, this.config);
+        serviceManagerHandler.export(serviceManagerHandler.build(), this.toFile());
+    }
+
+    @Override
     public String getName() {
         return "java";
     }
