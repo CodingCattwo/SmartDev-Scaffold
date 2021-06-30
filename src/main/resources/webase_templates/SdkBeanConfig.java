@@ -1,4 +1,4 @@
-package $
+package ${package};
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -15,8 +15,6 @@ import org.fisco.bcos.sdk.config.model.ConfigProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-{package};
 
 @Configuration
 @Slf4j
@@ -76,11 +74,15 @@ public class SdkBeanConfig {
             return;
         }
         String privateKey;
-        if (!config.getHexPrivateKey().contains(",") {
+        if (!config.getHexPrivateKey().contains(",")) {
             privateKey = config.getHexPrivateKey();
         } else {
             String[] list = config.getHexPrivateKey().split(",");
             privateKey = list[0];
+        }
+        if (privateKey.startsWith("0x") || privateKey.startsWith("0X")) {
+            privateKey = privateKey.substring(2);
+            config.setHexPrivateKey(privateKey);
         }
         client.getCryptoSuite().setCryptoKeyPair(client.getCryptoSuite().createKeyPair(privateKey));
     }
