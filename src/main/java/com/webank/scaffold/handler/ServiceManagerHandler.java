@@ -156,7 +156,9 @@ public class ServiceManagerHandler {
                 .addAnnotation(annotation.build())
                 .returns(mapType);
 
-            // new concurrent hash map of contractService
+            /**
+             * add concurrent hash map of contractService
+             */
             methodBuilder.addStatement("$T serviceMap = new $T<>(this.hexPrivateKeyList.size())",
                 mapType, ConcurrentHashMap.class);
             /**
@@ -167,11 +169,9 @@ public class ServiceManagerHandler {
                 + "\t" + serviceClassName + " " + firstLowerCaseServiceName + " = new " + serviceClassName + "();\n"
                 + "\t" + firstLowerCaseServiceName + ".setAddress(this.config.getContract().get" + contractName + "Address());\n"
                 + "\t" + firstLowerCaseServiceName + ".setClient(this.client);\n"
-//                + "\t" + "if (!this.hexPrivateKeyList.get(i).isEmpty()) {\n"
                 + "\t" + ClassName.get(AssembleTransactionProcessor.class) + " txProcessor = "
                 + ClassName.get(TransactionProcessorFactory.class) + ".createAssembleTransactionProcessor(this.client, this.client.getCryptoSuite().createKeyPair(this.hexPrivateKeyList.get(i)));\n"
                 + "\t" + firstLowerCaseServiceName + ".setTxProcessor(txProcessor);\n"
-//                + "\t" + "}\n"
                 + "\t" + "serviceMap.put(this.client.getCryptoSuite().createKeyPair(this.hexPrivateKeyList.get(i)).getAddress(), " + firstLowerCaseServiceName +");\n"
                 + "}\n");
 
