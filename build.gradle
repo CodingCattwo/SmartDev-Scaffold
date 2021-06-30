@@ -13,12 +13,11 @@ targetCompatibility = 1.8
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
 repositories {
-    mavenCentral()
     maven { url "https://maven.aliyun.com/nexus/content/groups/public/"}
+    mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     maven { url "https://dl.bintray.com/ethereum/maven/" }
     mavenLocal()
-
 
 }
 
