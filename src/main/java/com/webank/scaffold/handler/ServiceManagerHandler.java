@@ -15,7 +15,6 @@
 package com.webank.scaffold.handler;
 
 import com.squareup.javapoet.AnnotationSpec;
-import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
@@ -35,6 +34,8 @@ import javax.lang.model.element.Modifier;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.fisco.bcos.sdk.client.Client;
+import org.fisco.bcos.sdk.crypto.CryptoSuite;
+import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
 import org.fisco.bcos.sdk.transaction.manager.AssembleTransactionProcessor;
 import org.fisco.bcos.sdk.transaction.manager.TransactionProcessorFactory;
 
@@ -155,6 +156,10 @@ public class ServiceManagerHandler {
                 .addException(Exception.class)
                 .addAnnotation(annotation.build())
                 .returns(mapType);
+            /**
+             * add java doc
+             */
+            methodBuilder.addJavadoc("@notice: must use @Qualifier(\"" + contractServiceName + "\") with @Autowired to get this Bean\n");
 
             /**
              * add concurrent hash map of contractService
@@ -166,15 +171,23 @@ public class ServiceManagerHandler {
               */
             methodBuilder.addCode(
                 "for (int i = 0; i < this.hexPrivateKeyList.size(); i++) {\n"
-                + "\t" + serviceClassName + " " + firstLowerCaseServiceName + " = new " + serviceClassName + "();\n"
+                + "\t" + "String privateKey = this.hexPrivateKeyList.get(i);\n"
+                + "\t" + "if (privateKey.startsWith(\"0x\") || privateKey.startsWith(\"0X\")) {\n"
+                + "\t" + "\t" + "privateKey = privateKey.substring(2);\n"
+                + "\t}\n"
+                + "\t" + ClassName.get(CryptoSuite.class) + " cryptoSuite = new " + ClassName.get(CryptoSuite.class) + "(this.client.getCryptoType());\n"
+                + "\t" + ClassName.get(CryptoKeyPair.class) + " cryptoKeyPair = cryptoSuite.createKeyPair(privateKey);\n"
+                + "\t" + "String userAddress = cryptoKeyPair.getAddress();\n"
+                + "\t" + "log.info(\"++++++++hexPrivateKeyList[{}]:{},userAddress:{}\", i, privateKey, userAddress);\n"
+                + "\t" + contractServiceName + " " + firstLowerCaseServiceName + " = new " + contractServiceName + "();\n"
                 + "\t" + firstLowerCaseServiceName + ".setAddress(this.config.getContract().get" + contractName + "Address());\n"
                 + "\t" + firstLowerCaseServiceName + ".setClient(this.client);\n"
-                + "\t" + ClassName.get(AssembleTransactionProcessor.class) + " txProcessor = "
-                + ClassName.get(TransactionProcessorFactory.class) + ".createAssembleTransactionProcessor(this.client, this.client.getCryptoSuite().createKeyPair(this.hexPrivateKeyList.get(i)));\n"
+                + "\t" + ClassName.get(AssembleTransactionProcessor.class) + " txProcessor = \n"
+                + "\t" + "\t" + ClassName.get(TransactionProcessorFactory.class) + ".createAssembleTransactionProcessor(this.client, cryptoKeyPair);\n"
                 + "\t" + firstLowerCaseServiceName + ".setTxProcessor(txProcessor);\n"
-                + "\t" + "serviceMap.put(this.client.getCryptoSuite().createKeyPair(this.hexPrivateKeyList.get(i)).getAddress(), " + firstLowerCaseServiceName +");\n"
-                + "}\n");
-
+                + "\t" + "serviceMap.put(userAddress, " + firstLowerCaseServiceName +");\n"
+                + "}\n"
+                + "log.info(\"++++++++" + contractServiceName + " map:{}\", serviceMap);\n");
             methodBuilder.addStatement("return serviceMap");
             typeBuilder.addMethod(methodBuilder.build());
         }
@@ -182,25 +195,24 @@ public class ServiceManagerHandler {
         return typeBuilder;
     }
 
-
-//    private ClassName serviceClassName(String contract){
-//        String pkg = PackageNameUtil.getRootPackageName(config);
-//        String serviceName = contract + "Service";
-//        return ClassName.get(pkg+".service", serviceName);
-//    }
-
-
     private TypeSpec.Builder populateServiceMapField(TypeSpec.Builder typeBuilder) {
         for (String contractName : contracts) {
             String servicePkg = PackageNameUtil.getServicePackageName(config);
             String contractServiceName = contractName + "Service";
             ClassName serviceClassName = ClassName.get(servicePkg, contractServiceName);
             String firstLowerCaseServiceName = contractServiceName.substring(0, 1).toLowerCase() + contractServiceName.substring(1);
+            /**
+             * annotation
+             */
+            AnnotationSpec.Builder qualifierAnnotation = AnnotationSpec
+                .builder(ClassName.get("org.springframework.context.annotation","Qualifier"))
+                .addMember("value", "\"" + contractServiceName + "\"");
+
             FieldSpec mapField
                 = FieldSpec.builder(serviceClassName, firstLowerCaseServiceName + "Map")
                 .addModifiers(Modifier.PRIVATE)
-                .addAnnotation(
-                    ClassName.get("org.springframework.beans.factory.annotation", "Autowired"))
+                .addAnnotation(ClassName.get("org.springframework.beans.factory.annotation", "Autowired"))
+                .addAnnotation(qualifierAnnotation.build())
                 .build();
             typeBuilder.addField(mapField);
         }
